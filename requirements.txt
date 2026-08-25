@@ -1,0 +1,7 @@
+# Tested with Python 3.12.13 (all LPs via SciPy's HiGHS interface)
+numpy==2.2.6
+scipy==1.15.3
+pandas==2.2.3
+pyarrow==23.0.1
+matplotlib==3.10.3
+cvxpy==1.9.2        # only for pmmf_steam.py (P-MMF baseline, dual mirror descent projection)

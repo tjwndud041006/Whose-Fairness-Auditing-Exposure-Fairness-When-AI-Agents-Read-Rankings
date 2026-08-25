@@ -1,0 +1,7 @@
+code/__pycache__/
+code/*.json
+outputs/tables/
+outputs/*.log
+outputs/figs/*
+!outputs/figs/overview.pdf
+.venv/
