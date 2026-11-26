@@ -1,5 +1,12 @@
 """Assemble Tables 2-4 of the paper from the analysis JSONs and check every cell against the values
 printed in the paper. Writes outputs/tables/table{2,3,4}.txt and outputs/tables/check.txt.
+
+The table4.txt built here is the single-canonical-workload cross-check. The TYPESET Table 4 is
+produced by t4_bootstrap.py --all + t4_table4.py, which re-evaluates every row on the canonical
+workload and the 20 bootstrap workloads and reports paired SDs; see outputs/tables/table4.tex.
+The direct-K=10 3-seed premium expectation is .049, not the .050 of earlier rounds: seeds 1 and 2
+originally had no GPT-5.6-sol curve and silently reused the seed-42 one (k10_analysis.py fallback);
+that curve has since been measured at both seeds, so all eight models now vary with the seed.
 Run: python tables_assemble.py
 """
 import json, numpy as np
@@ -76,7 +83,7 @@ t4 = ["Curve set & premium & lambda_break & s-ind",
       f"Leave one curve or one family out & {f3(min(loo_p))}--{f3(max(loo_p))} & {f2(min(loo_l))}--{f2(max(loo_l))} & {min(fs['loo'].values())}--{max(fs['loo'].values())}",
       f"Human side as a set (DCG, RBP.8, RBP.9) & {f3(rf['human_set']['premium_combined'])} & {f2(mt['ESCI']['lambda_break'])} & {fs['human_set']}",
       f"Mixture cap w=1/4 & {f3(tb['M2_box']['1/4']['premium'])} & {f2(tb['M2_box']['1/4']['lam'])} & {fs['cap14']}"]
-for name, g, e_, tol in [("k10 premium",e["premium_direct"]["mean"],.050,.0006),("k10 lam",e["lam_direct"]["mean"],.47,.006),("real premium",real["premium_direct"],.037,.0006),("real lam",real["lam_direct"],.61,.006),("real sind",real["sind_direct"],4,.5),
+for name, g, e_, tol in [("k10 premium",e["premium_direct"]["mean"],.049,.0006),("k10 lam",e["lam_direct"]["mean"],.47,.006),("real premium",real["premium_direct"],.037,.0006),("real lam",real["lam_direct"],.61,.006),("real sind",real["sind_direct"],4,.5),
                          ("access premium",cr["access"]["premium"],.051,.0006),("access lam",cr["access"]["lambda_break"],.38,.006),("access sind",cr["access"]["sign_ind"],3,.5),("tv premium",ep["eps"]["0.05"]["premium"],.064,.0006),("tv lam",ep["eps"]["0.05"]["lam"],.39,.006),("tv sind",fs["tvball05"],5,.5),
                          ("perm premium",tb["M5_perm"]["prem_mean"],.047,.0006),("perm lam",tb["M5_perm"]["lam_mean"],.56,.006),("dir premium",tb["M5_dirichlet"]["prem_mean"],.017,.0006),("dir lam",tb["M5_dirichlet"]["lam_mean"],.13,.006),("dir sind",tb["M5_dirichlet"]["sind_mean"],7.7,.06),
                          ("loo min premium",min(loo_p),.033,.0006),("loo sind",max(fs["loo"].values()),4,.5),("hset premium",rf["human_set"]["premium_combined"],.039,.0006),("hset sind",fs["human_set"],6,.5),("cap premium",tb["M2_box"]["1/4"]["premium"],.038,.0006),("cap lam",tb["M2_box"]["1/4"]["lam"],.50,.006),("cap sind",fs["cap14"],4,.5)]:

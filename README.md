@@ -1,6 +1,6 @@
 # Whose Fairness? Auditing Exposure Fairness When AI Agents Read Rankings — code and data
 
-Anonymized reproduction bundle for the WSDM 2027 submission. It reproduces every table and figure of the
+Reproduction bundle for the WSDM 2027 paper. It reproduces every table and figure of the
 main paper (Tables 1–4, Figures 2–5) from
 
 * the **frozen measured examination curves** of the eight LLM readers (`data/curves/`), and
@@ -41,7 +41,8 @@ order with the table/figure each one feeds.
 | Table 1 (curve set at K=20) | `table1_curves.py` | `outputs/tables/table1_curves.txt` |
 | Table 2 (four domains) | `main_tables.py`, `rtb_main.py` (oracle / presence price), `rtb_domains.py` (RTB break-even), `main_frontier.py`, `boot_domains.py`, `steam_frontier.py` (bootstrap bands) | `outputs/tables/table2.txt` |
 | Table 3 (ESCI policies; MAD / AWRF / Gini; P-MMF) | `main_esci.py`, `mixcal_merit.py`, `robust_abar.py`, `mad_table.py`, `awrf_gini.py`, `fill_sind.py` (Gini at a=0.25), `pmmf_steam.py` | `outputs/tables/table3.txt` |
-| Table 4 (perturbations of the set) | `k10_analysis.py` (+`--prefix=k10s1/k10s2/real`), `k10_seeds_summary.py`, `construct_robust.py`, `eps_robust.py`, `tierb.py`, `review_fixes.py`, `fill_sind.py` (sign-indeterminacy rows) | `outputs/tables/table4.txt` |
+| Table 4 (perturbations of the set), **as typeset** | `t4_bootstrap.py --all` then `t4_table4.py`: every row re-evaluated on the canonical workload and the 20 bootstrap workloads; cells are the canonical value ± the SD of the paired difference from the baseline | `outputs/tables/table4.tex` |
+| Table 4, single-workload cross-check | `k10_analysis.py` (+`--prefix=k10s1/k10s2/real`), `k10_seeds_summary.py`, `construct_robust.py`, `eps_robust.py`, `tierb.py`, `review_fixes.py`, `fill_sind.py` (sign-indeterminacy rows) | `outputs/tables/table4.txt` |
 | Figure 2 (curves; (top-3, r_H) space) | `fig2_instrument.py` | `outputs/figs/instrument.pdf` |
 | Figure 3 (frontier, audit triad, certificate expiry) | `main_frontier.py`, `triad_window.py`, `rtb_main.py`, `fig_crossing_rtb.py` → `fig3_frontier.py` | `outputs/figs/frontier.pdf` |
 | Figure 4 (U_max(a) vs agent share) | `main_tables.py`, `fig_crossing_rtb.py` → `fig4_crossing.py` | `outputs/figs/crossing.pdf` |
@@ -111,7 +112,7 @@ API key (read from the environment) and are provided for transparency; nothing i
 
 ## License and citation
 
-Code: released under the MIT License after the anonymity period. Data files in `data/derived/` are derived
+Code: released under the MIT License. Data files in `data/derived/` are derived
 subsets of the respective public datasets and remain under their original terms (ESCI: Apache 2.0;
 TREC Fair Ranking 2022 / Wikipedia: CC BY-SA; FairDiverse Steam preprocessing: its repository license;
 LastFM-360K: research use). Measured curves in `data/curves/` are released with the code.

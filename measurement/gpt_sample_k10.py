@@ -2,15 +2,17 @@
 trials as gate_logit.py, pick + cheapest tasks, n=S samples per trial at
 temperature=1, reasoning_effort='none'. Output schema matches gate_logit
 (results.{pick,cheap}.curve) with prefix fcurve_ so extended-set globs pick it up.
-Usage: gpt_sample.py <model_id>
+Usage: gpt_sample_k10.py <model_id> [--seed=42] [--prefix=k10]
 """
 import json, sys, urllib.request
 from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 
-MODEL = sys.argv[1]
+MODEL = next((a for a in sys.argv[1:] if not a.startswith("--")), "gpt-5.6-sol")
 S, N_TRIALS, K = 8, 400, 10
-rng = np.random.default_rng(42)
+SEED = int(next((a.split("=",1)[1] for a in sys.argv if a.startswith("--seed=")), "42"))
+PREFIX = next((a.split("=",1)[1] for a in sys.argv if a.startswith("--prefix=")), "k10")
+rng = np.random.default_rng(SEED)
 LET = [chr(65+i) for i in range(K)]
 ADJ = ["Pro","Lite","Max","Air","Ultra","Mini","Plus","Neo","Prime","Core"]
 BRAND = ["Sonix","Auralis","Beatric","Clarion","Dynavox","Echora","Fonora","Galex",
@@ -78,6 +80,7 @@ for pname, tmpl in PROMPTS.items():
           + (f" cheap-acc={np.mean(cheap_hit):.2f}" if pname == "cheap" else ""), flush=True)
     print("  curve:", np.round(curve, 3).tolist(), flush=True)
 short = MODEL.split("/")[-1]
-json.dump({"model": MODEL, "protocol": "sampling-n8-T1-reasoning_none", "results": results},
-          open(f"./k10_{short}.json", "w"))
-print(f"saved k10_{short}")
+json.dump({"model": MODEL, "protocol": "sampling-n8-T1-reasoning_none",
+           "seed": SEED, "results": results},
+          open(f"./{PREFIX}_{short}.json", "w"))
+print(f"saved {PREFIX}_{short}")

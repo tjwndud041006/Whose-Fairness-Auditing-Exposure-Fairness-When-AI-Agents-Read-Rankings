@@ -39,6 +39,11 @@ run k10_seeds_summary.py
 run k10_analysis.py --prefix=real --all      # real-item re-measurement
 run construct_robust.py       # access vs choice curves
 run fill_sind.py              # sign-indeterminacy for the remaining Table 4 rows; Steam Gini at a=0.25
+# ---- Table 4 as typeset: every row re-evaluated on the canonical + 20 bootstrap workloads.
+# ~1 h single-core. To parallelise, replace the --all line with one run per workload, e.g.
+#   seq 0 19 | xargs -P 7 -I{} "$PY" t4_bootstrap.py --b={}   (plus --b=canon)
+run t4_bootstrap.py --all     # all ten Table 4 rows per workload       -> t4_boot_<b>.json
+run t4_table4.py              # canonical value +- paired SD vs baseline -> outputs/tables/table4.tex
 # ---- Figure 5: provider-level incidence (five ESCI top-50 subsets)
 run main_fig4_all.py
 # ---- Figures 2-5
